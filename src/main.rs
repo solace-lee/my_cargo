@@ -2,8 +2,10 @@
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
+mod data_type;
 
 fn main() {
+  data_type::main_type();
     println!("猜数游戏");
     // let mut rng = thread_rng();
     // let secret_number = rng.gen_range(1..101);
@@ -23,7 +25,7 @@ fn main() {
             Err(e) => {
                 println!("err{}", e);
                 continue;
-            },
+            }
         };
 
         println!("你猜测的数是{}", guess);
@@ -34,7 +36,7 @@ fn main() {
             Ordering::Equal => {
                 println!("You Win");
                 break;
-            },
+            }
         }
     }
 }
