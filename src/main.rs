@@ -5,7 +5,7 @@ use std::io;
 mod data_type;
 
 fn main() {
-  data_type::main_type();
+    data_type::main_type();
     println!("猜数游戏");
     // let mut rng = thread_rng();
     // let secret_number = rng.gen_range(1..101);
