@@ -1,12 +1,15 @@
 // use rand::{thread_rng, Rng};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+use std::{cmp::Ordering, io};
 mod data_type;
+mod vector;
 
 fn main() {
     data_type::main_type();
+    // vector::vector_demo::vector_test();
+    vector::vector_demo::enum_test();
     println!("猜数游戏");
+    return;
     // let mut rng = thread_rng();
     // let secret_number = rng.gen_range(1..101);
 
