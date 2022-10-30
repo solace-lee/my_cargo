@@ -1,4 +1,8 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{self, ErrorKind, Read},
+};
 
 pub fn hash_map() {
     let teams = vec![String::from("Blue"), String::from("Yellow")];
@@ -38,7 +42,9 @@ pub fn hash_map() {
         println!("替换现有的value{}, {}", k, v);
     }
 
-    test_word_space()
+    // test_word_space();
+    // test_file();
+    test_read();
 }
 
 fn test_word_space() {
@@ -52,4 +58,66 @@ fn test_word_space() {
     }
 
     println!("测试空格切割：{:#?}", map);
+}
+
+fn test_file() {
+    // let f = File::open("123.text");
+
+    // let f = match f {
+    //     Ok(file) => file,
+    //     Err(error) => match error.kind() {
+    //         ErrorKind::NotFound => match File::create("123.text") {
+    //             Ok(fc) => fc,
+    //             Err(e) => panic!("创建文件失败{:?}", e),
+    //         },
+    //         other_error => panic!("打开文件错误{:?}", other_error),
+    //     },
+    // };
+
+    let f = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("创建文件失败{:?}", error);
+            })
+        } else {
+            panic!("打开文件错误{:?}", error)
+        }
+    });
+
+    // let f = File::open("123.text").expect("无法找到文件");
+
+    println!("{:?}", f)
+}
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => match e.kind() {
+            ErrorKind::NotFound => File::create("hello.txt").expect("创建失败"),
+            _other => return Err(e),
+        },
+    };
+
+    let mut s = String::new();
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+
+fn simple_read() -> Result<String, io::Error> {
+  let mut f = File::open("Cargo.toml")?;
+
+  let mut s = String::new();
+  f.read_to_string(&mut s)?;
+  Ok(s)
+}
+
+fn test_read() {
+
+    // let t = read_username_from_file();
+    let t = simple_read();
+    println!("读取文件内容{:?}", t)
 }
