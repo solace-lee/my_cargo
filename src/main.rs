@@ -3,11 +3,13 @@ use rand::Rng;
 use std::{cmp::Ordering, io};
 mod data_type;
 mod vector;
+mod test_char;
 
 fn main() {
     data_type::main_type();
     // vector::vector_demo::vector_test();
     vector::vector_demo::enum_test();
+    test_char::test_char::char_test();
     println!("猜数游戏");
     return;
     // let mut rng = thread_rng();
