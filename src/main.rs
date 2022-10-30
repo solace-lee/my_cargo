@@ -10,6 +10,7 @@ fn main() {
     // vector::vector_demo::vector_test();
     vector::vector_demo::enum_test();
     test_char::test_char::char_test();
+    test_char::test_hashmap::hash_map();
     println!("猜数游戏");
     return;
     // let mut rng = thread_rng();
