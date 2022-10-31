@@ -1,8 +1,17 @@
-use std::io;
-
+use my_cargo::{run, Config};
+use std::{env, process};
 fn main() {
-    println!("请输入数字");
-    let mut numrand = String::new();
-    io::stdin().read_line(&mut numrand).expect("无法读取行");
-    println!("你猜的数是：{}", numrand);
+    let args: Vec<String> = env::args().collect();
+
+    println!("参数为：{:?}", args);
+
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("problem parsing arguments: {}", err);
+        process::exit(1);
+    });
+
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+        process::exit(2);
+    };
 }
