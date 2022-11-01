@@ -38,30 +38,36 @@ fn main() {
     generate_workout(simulated_user_specified_value, simulated_random_number);
 }
 
-fn simulated_expensive_calculation(intensity: u32) -> u32 {
-    println!("calculation slowly...");
-    thread::sleep(Duration::from_secs(2));
-    intensity
-}
-
 fn generate_workout(intensity: u32, random_number: u32) {
+    let mut expensive_closure = Cacher::new(|num| {
+        println!("calculation slowly...");
+        thread::sleep(Duration::from_secs(2));
+        num
+    });
+
     if intensity < 25 {
-        println!(
-            "today, do {} pushups!",
-            simulated_expensive_calculation(intensity)
-        );
-        println!(
-            "next, do {} situps!",
-            simulated_expensive_calculation(intensity)
-        );
+        println!("today, do {} pushups!", expensive_closure.value(intensity));
+        println!("next, do {} situps!", expensive_closure.value(intensity));
     } else {
         if random_number == 3 {
             println!("take a break today! remember to stay hydrated!");
         } else {
             println!(
                 "today, run for {} minutes!",
-                simulated_expensive_calculation(intensity)
+                expensive_closure.value(intensity)
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn call_with_different_values() {
+        let mut c = super::Cacher::new(|a| a);
+        let v1 = c.value(1);
+        let v2 = c.value(2);
+
+        assert_eq!(v2, 2);
     }
 }
