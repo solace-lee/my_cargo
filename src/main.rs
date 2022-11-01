@@ -1,17 +1,67 @@
-use my_cargo::{run, Config};
-use std::{env, process};
+use std::{env, process, thread, time::Duration};
+
+struct Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    calculation: T,
+    value: Option<u32>,
+}
+
+impl<T> Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    fn new(calculation: T) -> Cacher<T> {
+        Cacher {
+            calculation,
+            value: None,
+        }
+    }
+
+    fn value(&mut self, arg: u32) -> u32 {
+        match self.value {
+            Some(v) => v,
+            None => {
+                let v = (self.calculation)(arg);
+                self.value = Some(v);
+                v
+            }
+        }
+    }
+}
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let simulated_user_specified_value = 10;
+    let simulated_random_number = 7;
 
-    println!("参数为：{:?}", args);
+    generate_workout(simulated_user_specified_value, simulated_random_number);
+}
 
-    let config = Config::new(&args).unwrap_or_else(|err| {
-        eprintln!("problem parsing arguments: {}", err);
-        process::exit(1);
-    });
+fn simulated_expensive_calculation(intensity: u32) -> u32 {
+    println!("calculation slowly...");
+    thread::sleep(Duration::from_secs(2));
+    intensity
+}
 
-    if let Err(e) = run(config) {
-        eprintln!("Application error: {}", e);
-        process::exit(2);
-    };
+fn generate_workout(intensity: u32, random_number: u32) {
+    if intensity < 25 {
+        println!(
+            "today, do {} pushups!",
+            simulated_expensive_calculation(intensity)
+        );
+        println!(
+            "next, do {} situps!",
+            simulated_expensive_calculation(intensity)
+        );
+    } else {
+        if random_number == 3 {
+            println!("take a break today! remember to stay hydrated!");
+        } else {
+            println!(
+                "today, run for {} minutes!",
+                simulated_expensive_calculation(intensity)
+            );
+        }
+    }
 }
