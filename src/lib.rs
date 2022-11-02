@@ -1,6 +1,8 @@
 use std::{env, error::Error, fs};
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    //! 用于学习闭包和迭代器的分支
+    //! 学习文档注释
     println!("第一个参数{}", config.query);
     println!("第二个参数{}", config.filename);
     let contents = fs::read_to_string(config.filename)?;
@@ -46,6 +48,8 @@ impl Config {
     }
 }
 
+/// 使用迭代器语法优化代码
+/// 性能和手写for循环没有任何差异
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     // let mut results = Vec::new();
 
@@ -56,7 +60,10 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     // }
     // results
 
-    contents.lines().filter(|line| line.contains(query)).collect()
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
@@ -69,7 +76,10 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     // }
     // results
 
-    contents.lines().filter(|line| line.to_lowercase().contains(query)).collect()
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(query))
+        .collect()
 }
 
 #[cfg(test)]
